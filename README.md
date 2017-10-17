@@ -37,13 +37,13 @@ Simple quickstart
 
 ### app.yaml, cron.yaml
 * Replace subdir4bg, subdir4rss, example to your own.<br>
-See official guide: [app.yaml Reference](https://cloud.google.com/appengine/docs/standard/python/config/appref)<br>
-                    [Scheduling Tasks With Cron for Python](https://cloud.google.com/appengine/docs/standard/python/config/cron)
+See official guide: [app.yaml Reference](https://cloud.google.com/appengine/docs/standard/python/config/appref), [Scheduling Tasks With Cron for Python](https://cloud.google.com/appengine/docs/standard/python/config/cron)
+
 Upload to app engine
 ====
 * cd to the directory of your project
 >gcloud config set project PROJECT_NAME<br>
 >gcloud app deploy app.yaml cron.yaml --version=VERSION_NUMBER<br>
 
-[See official guide](https://cloud.google.com/appengine/docs/standard/python/tools/uploadinganapp)
+See official guide: [Deploying a Python App](https://cloud.google.com/appengine/docs/standard/python/tools/uploadinganapp)
 
