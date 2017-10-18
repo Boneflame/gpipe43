@@ -1,0 +1,11 @@
+cron:
+
+- description: write something...
+  url: /[subdir4bg]/example1
+  schedule: every 1 hours from 09:00 to 23:00
+  timezone: Europe/Berlin
+
+- description: write something...
+  url: /[subdir4bg]/example2
+  schedule: every 1 hours from 09:30 to 23:30
+  timezone: Europe/Berlin

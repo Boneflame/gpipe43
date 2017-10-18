@@ -1,0 +1,34 @@
+#application: prjname
+#version: 1.23
+runtime: python27
+api_version: 1
+threadsafe: true
+
+libraries:
+- name: lxml
+  version: "latest"
+
+handlers:
+
+- url: /favicon\.ico
+  static_files: static/images/favicon.ico
+  upload: static/images/favicon\.ico
+
+
+'''''''''''''''''''''
+''' config start  '''
+'''''''''''''''''''''
+
+- url: /[subdir4bg]/example1
+  script: example1.app		#site for cron
+- url: /[subdir4rss]/example1
+  script: feed_list.example1	#feed site
+
+- url: /[subdir4bg]/example2
+  script: example2.app		#site for cron
+- url: /[subdir4rss]/example2
+  script: feed_list.example2	#feed site
+
+''''''''''''''''''
+''' config end '''
+''''''''''''''''''
