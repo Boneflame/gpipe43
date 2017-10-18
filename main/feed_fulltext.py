@@ -35,7 +35,7 @@ def ausfuehren(lib_or_fetch, siteurl, reg4nextpage, reg4text, reg4comment, Anzah
     if re.search(r'ERROR! QwQ', rss):
         root = etree.XML(lib_or_fetch('http://' + prjname + '.appspot.com' + subdir4rss + '/' + rssname), etree.XMLParser(recover=True)[0])
         root.xpath('//item[1]/description')[0].text = CDATA('<br/><p><span style="color:rgb(255,0,0);font-size:30px;">' + rss + '</span></p>')
-        root.xpath('//item[1]/title')[0].text = CDATA(r'网站rss无法访问啦！')
+        root.xpath('//item[1]/title')[0].text = CDATA(rss)
         return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8')
     else:
 #        root = etree.XML(rss, etree.XMLParser(encoding='utf-8', recover=True))
