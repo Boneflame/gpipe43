@@ -1,4 +1,5 @@
-gpipe43 is a full text RSS generator which can hosted on gae. Support article that contain more than 1 page.
+gpipe43 is a full text RSS generator which can hosted on gae. Support article that contain more than 1 page.<br>
+Inspired by Yahoo! Pipes and Feed43.
 
 Prepare
 ====
