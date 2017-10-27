@@ -1,5 +1,5 @@
 #application: prjname
-#version: 1.23
+#version: 1.24
 runtime: python27
 api_version: 1
 threadsafe: true
