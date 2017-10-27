@@ -13,10 +13,10 @@ def pagesource(URL):
         result = urlfetch.fetch(URL, headers = {'Referer': URL}, deadline = 60).content
         return result
     except httplib.HTTPException, e:
-        return r'ERROR! QwQ<br/>HTTPException'
-    except google.appengine.runtime.DeadlineExceededError:
-        return r'ERROR! QwQ<br/>DeadlineExceededError'
-    except google.appengine.runtime.apiproxy_errors.DeadlineExceededError:
-        return r'ERROR! QwQ<br/>apiproxy_errors.DeadlineExceededError'
-    except google.appengine.api.urlfetch_errors.DeadlineExceededError:
-        return r'ERROR! QwQ<br/>urlfetch_errors.DeadlineExceededError'
+        return r'ERROR! QwQ<br/>HTTPException: ' + str(e.reason)
+    except google.appengine.api.urlfetch_errors.DNSLookupFailedError, e:
+        return r'ERROR! QwQ<br/>' + str(e)
+    except google.appengine.api.urlfetch_errors.DeadlineExceededError, e:
+        return r'ERROR! QwQ<br/>' + str(e)
+    except google.appengine.runtime.apiproxy_errors.DeadlineExceededError, e:
+        return r'ERROR! QwQ<br/>apiproxy_errors.' + str(e)
