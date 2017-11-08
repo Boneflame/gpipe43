@@ -22,7 +22,9 @@ def pagesource(URL):
         if ContentEncoding == 'gzip':
             buf = StringIO(response.read())
             f = gzip.GzipFile(fileobj=buf)
-            return f.read()
+            result = f.read()
+            f.close()
+            return result
         elif ContentEncoding == 'deflate':
             return zlib.decompress(response.read(), 16+zlib.MAX_WBITS)
         else:
