@@ -1,6 +1,12 @@
-gpipe43 is a full text RSS generator which can hosted on gae. Support article that contain more than 1 page.<br>
+gpipe43 is a full text RSS generator which can hosted on Google App Engine. Use Regex to search and format full text from a article, or any other content that you want.<br>
 Inspired by Yahoo Pipes and Feed43.<br>
 Yahoo Pipe RIP.
+
+Feature
+===
+* Support multi page.
+* Display all images from article's gallery.
+* Display article's comment.
 
 Prepare
 ====
@@ -9,7 +15,7 @@ Prepare
 
 Simple quickstart
 ====
-### Edit /main/user_agents
+### Edit /main/user_agents.py
 * add UA
 ### Edit config.py
 * `prjname`: Name of your project on app engine
