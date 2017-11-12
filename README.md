@@ -5,8 +5,8 @@ Yahoo Pipe RIP.
 Feature
 ===
 * Support multi page.
-* Display all images from article's gallery.
-* Display article's comment.
+* Display all images of article's gallery.
+* Appending article's comment is possible.
 
 Prepare
 ====
@@ -20,8 +20,8 @@ Simple quickstart
 ### Edit config.py
 * `prjname`: Name of your project on app engine
 * `bucket_name`: Name of bucket
-* `subdir4bg`: The crawler working under http://prjname.appspot.com/subdir4bg/rssname
-* `subdir4rss`: This is your RSS site: http://prjname.appspot.com/subdir4rss/rssname
+* `subdir4bg`: The crawler working under http://[prjname].appspot.com/[subdir4bg]/[rssname]
+* `subdir4rss`: This is your RSS site: http://[prjname].appspot.com/[subdir4rss]/[rssname]
 ### Edit example.py，replace 'example' to your own RSS's name
 * `rssname`: Your own RSS's name
 * `siteurl`: The website that you want to generat RSS

@@ -181,8 +181,7 @@ def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, re
 #                    except UnicodeDecodeError:
                         item_description.text = CDATA(remove_control_characters("".join(Ergebnis[0]).decode(encoding, 'replace') + Ergebnis[1].decode(encoding, 'replace')))
 
-            elif re.search(r'ERROR! QwQ', SeiteQuelle):
-                item_description.text = '<br/><p style="color:rgb(255,0,0);font-size:30px;">' + SeiteQuelle + '</p>'	#移除decode('utf-8') #error信息可能需要添加decode
+            elif re.search(r'ERROR! QwQ', SeiteQuelle): pass		#在title处已填description
             else:
                 item_description.text = '<br/><p style="color:rgb(255,0,0);font-size:30px;">Please check your regex</p>'
 
