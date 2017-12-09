@@ -80,7 +80,9 @@ def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, re
         root.xpath('/rss/channel/description')[0].text = CDATA(siteurl[0])
 
     root.xpath('/rss/channel/link')[0].text = CDATA(siteurl[0])
-    root.xpath('/rss/channel/generator')[0].text = 'Shinobu Jamella Hoshino'
+    root.xpath('/rss/channel/generator')[0].text = 'https://github.com/Boneflame/gpipe43'
+    root.xpath('/rss/channel/webMaster')[0].text = ''
+    root.xpath('/rss/channel/copyright')[0].text = ''
     root.xpath('/rss/channel/lastBuildDate')[0].text = time.strftime(ISOTIMEFORMAT, time.localtime(time.time()))
 
     pathlist = []
