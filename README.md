@@ -48,7 +48,7 @@ Simple quickstart
 See official guide: [app.yaml Reference](https://cloud.google.com/appengine/docs/standard/python/config/appref), [Scheduling Tasks With Cron for Python](https://cloud.google.com/appengine/docs/standard/python/config/cron)
 
 ### Optional
-* Edit line 84 & 85 in ./main/rssgen.py, fill in your email or anyother copyright info.
+* Edit ./main/Vorlage.xml and Vorlage_Error.xml, you can the properties of elements 'generator', 'webMaster' and 'copyright' to your own.
 
 Upload to app engine
 ====
