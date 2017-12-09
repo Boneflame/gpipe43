@@ -47,6 +47,9 @@ Simple quickstart
 * Replace subdir4bg, subdir4rss, example to your own.<br>
 See official guide: [app.yaml Reference](https://cloud.google.com/appengine/docs/standard/python/config/appref), [Scheduling Tasks With Cron for Python](https://cloud.google.com/appengine/docs/standard/python/config/cron)
 
+### Optional
+* Edit line 84 & 85 in ./main/rssgen.py, fill in your email or anyother copyright info.
+
 Upload to app engine
 ====
 * cd to the directory of your project
