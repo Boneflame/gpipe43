@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
-__author__ = 'Shinobu Jamella Hoshino, knochenflamme@gmail.com'
+__author__ = 'Shinobu Jamella Hoshino, https://github.com/Boneflame/gpipe43'
 
-import chardet
-import urlfetch_ps
-import urllib_ps
-import Entdecker
+import urlfetch_ps, urllib_ps, Entdecker
 from remove_control_characters import remove_control_characters
+import chardet
 import random
 import re
 import urlparse
@@ -45,69 +43,77 @@ def run_itemgen_st(lib_or_fetch, encoding, itemgen, x, artikelurllist, reg4title
 
 
 #从网页抓
-def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, reg4text, reg4comment, reg4nextpage, Anzahl):
-    f = open('main/Vorlage.xml')
-    root = etree.XML(f.read(), etree.XMLParser(remove_blank_text=True))		#移除空白符，这样才可以pretty print
-    f.close()
-    rsschannel = root.xpath('//lastBuildDate')[0]
-
+def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, reg4text, reg4comment, reg4nextpage, Anzahl, *urlgen):
     if lib_or_fetch == 'use_urlfetch':
         lib_or_fetch = urlfetch_ps.pagesource
     else:
         lib_or_fetch = urllib_ps.pagesource
 
-    #填入channel元素的属性
     page_source = lib_or_fetch(siteurl[0])
     try:
         encoding = chardet.detect(page_source)['encoding']
         page_source = page_source.decode(encoding)
+    except UnicodeDecodeError:
+        page_source = page_source.decode(encoding, 'ignore')
     except TypeError: pass
-        
-    if len(re.findall(re.compile('<meta[\S\s]+?<title>(.*?)\s*</title>', re.I), page_source)) != 0:
-        root.xpath('/rss/channel/title')[0].text = CDATA(re.findall(re.compile('<meta[\S\s]+?<title>(.*?)\s*</title>', re.I), page_source)[0])
-    elif len(re.findall(re.compile('<title>\s*(.*?)\s*</title>', re.I), page_source)) != 0:
-        root.xpath('/rss/channel/title')[0].text = CDATA(re.findall('<title>\s*(.*?)\s*</title>', page_source)[0])
-    else:
-        root.xpath('/rss/channel/title')[0].text = CDATA(siteurl[0])
-
-    if len(re.findall(re.compile('<meta name="(description|keywords)" content="(.*?)"', re.I), page_source)) != 0:
-        root.xpath('/rss/channel/description')[0].text = CDATA(re.findall(re.compile('<meta name="(?:description|keywords)" content="(.*?)"', re.I), page_source)[0])
-    elif len(re.findall(re.compile('<meta content="(.{18,})" name="(description|keywords)"', re.I), page_source)) != 0:
-        root.xpath('/rss/channel/description')[0].text = CDATA(re.findall(re.compile('<meta content="(.{18,})" name="(?:description|keywords)"', re.I), page_source)[0])
-    elif len(re.findall(re.compile('<div class="profile_desc_value" title="(.*?)"', re.I), page_source)) != 0:		#wechat公众号
-        root.xpath('/rss/channel/description')[0].text = CDATA(re.findall(re.compile('<div class="profile_desc_value" title="(.*?)"'), page_source)[0])
-    else:
-        root.xpath('/rss/channel/description')[0].text = CDATA(siteurl[0])
-
-    root.xpath('/rss/channel/link')[0].text = CDATA(siteurl[0])
-    root.xpath('/rss/channel/lastBuildDate')[0].text = time.strftime(ISOTIMEFORMAT, time.localtime(time.time()))
 
     pathlist = []
-    lll = len(siteurl)
-    if lll == 1:
-        pathlist = re.findall(reg4site, page_source)
-    else:
-        #先找出第一个siteurl里的文章地址，再找其余siteurl的
-        for u in re.findall(reg4site, page_source):
-            pathlist.append(u)
-        siteurl.pop(0)
-        lll = lll-1
-        time.sleep(float(random.sample(range(4,10),1)[0]))
-        for i in random.sample(siteurl,lll):
-            mmm = re.findall(reg4site, lib_or_fetch(i)[0])
-            for j in mmm:
-                pathlist.append(j)
-            time.sleep(float(random.sample(range(4,10),1)[0]))
-
+    pathlist = re.findall(reg4site, page_source)
     if len(pathlist) != 0:
+        lll = len(siteurl)
+        if lll == 1: pass
+        else:
+            #先找出第一个siteurl里的文章地址，再找其余siteurl的
+            for u in re.findall(reg4site, page_source):
+                pathlist.append(u)
+            siteurl.pop(0)
+            lll = lll-1
+            time.sleep(float(random.sample(range(4,10),1)[0]))
+            for i in random.sample(siteurl,lll):
+                mmm = re.findall(reg4site, lib_or_fetch(i)[0])
+                for j in mmm:
+                    pathlist.append(j)
+                time.sleep(float(random.sample(range(4,10),1)[0]))
+
         #把相对路径转为绝对路径
-        if re.search(r'://', pathlist[0]):
+        if isinstance(urlgen, tuple) is True:		#如果有自定义的url转换函数，则调用它
+            artikelurllist = urlgen[0](pathlist)
+        elif re.search(r'://', pathlist[0]):
             artikelurllist = pathlist
         else:
             artikelurllist = [urlparse.urljoin(siteurl[0], path) for path in pathlist]
 
         #获得文章url后休息，以防被ban
         time.sleep(float(random.sample(range(4, 9), 1)[0]))
+
+        #填入channel元素的属性
+        f = open('main/Vorlage.xml')
+        root = etree.XML(f.read(), etree.XMLParser(remove_blank_text=True))		#移除空白符，这样才可以pretty print
+        f.close()
+        rsschannel = root.xpath('//lastBuildDate')[0]
+
+        if len(re.findall(re.compile('<meta[\S\s]+?<title>(.*?)\s*</title>', re.I), page_source)) != 0:
+            root.xpath('/rss/channel/title')[0].text = CDATA(re.findall(re.compile('<meta[\S\s]+?<title>(.*?)\s*</title>', re.I), page_source)[0])
+        elif len(re.findall(re.compile('<title>\s*(.*?)\s*</title>', re.I), page_source)) != 0:
+            root.xpath('/rss/channel/title')[0].text = CDATA(re.findall('<title>\s*(.*?)\s*</title>', page_source)[0])
+        elif isinstance(urlgen, tuple) is True:
+            root.xpath('/rss/channel/title')[0].text = CDATA(urlgen[1])
+        else:
+            root.xpath('/rss/channel/title')[0].text = CDATA(siteurl[0])
+
+        if len(re.findall(re.compile('<meta name="(description|keywords)" content="(.*?)"', re.I), page_source)) != 0:
+            root.xpath('/rss/channel/description')[0].text = CDATA(re.findall(re.compile('<meta name="(?:description|keywords)" content="(.*?)"', re.I), page_source)[0])
+        elif len(re.findall(re.compile('<meta content="(.{18,})" name="(description|keywords)"', re.I), page_source)) != 0:
+            root.xpath('/rss/channel/description')[0].text = CDATA(re.findall(re.compile('<meta content="(.{18,})" name="(?:description|keywords)"', re.I), page_source)[0])
+        elif len(re.findall(re.compile('<div class="profile_desc_value" title="(.*?)"', re.I), page_source)) != 0:		#wechat公众号
+            root.xpath('/rss/channel/description')[0].text = CDATA(re.findall(re.compile('<div class="profile_desc_value" title="(.*?)"'), page_source)[0])
+        elif isinstance(urlgen, tuple) is True:
+            root.xpath('/rss/channel/description')[0].text = CDATA(urlgen[2])
+        else:
+            root.xpath('/rss/channel/description')[0].text = CDATA(siteurl[0])
+
+        root.xpath('/rss/channel/link')[0].text = CDATA(siteurl[0])
+        root.xpath('/rss/channel/lastBuildDate')[0].text = time.strftime(ISOTIMEFORMAT, time.localtime(time.time()))
 
         def itemgen(lib_or_fetch, encoding, artikelurl, reg4title, reg4pubdate, reg4text, reg4comment, reg4nextpage):
             global root
@@ -136,21 +142,24 @@ def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, re
             else:
                 item_title.text = 'Please check your regex'
 
-            if len(re.findall(reg4pubdate, SeiteQuelle)) != 0:
-                tmp_pbdate = re.findall(reg4pubdate, SeiteQuelle)[0]
-                pubdate_temp = "".join(tmp_pbdate).replace('/', '-').replace('T', ' ').replace(r'&nbsp;', ' ')	#移除decode('utf-8')
-                pubdate_temp = re.sub('\.\d+', '', pubdate_temp)		#移除秒数后的小数
-                if re.match('[^0-9 :-\\\+]', pubdate_temp) != 0:
-                    item_pubDate.text = re.sub(r'(\+\d{2}):(\d{2})', '', pubdate_temp)
-                    vtext = []
+            if len(reg4pubdate) != 0:
+                if len(re.findall(reg4pubdate, SeiteQuelle)) != 0:
+                    tmp_pbdate = re.findall(reg4pubdate, SeiteQuelle)[0]
+                    pubdate_temp = "".join(tmp_pbdate).replace('/', '-').replace('T', ' ').replace(r'&nbsp;', ' ')	#移除decode('utf-8')
+                    pubdate_temp = re.sub('\.\d+', '', pubdate_temp)		#移除秒数后的小数
+                    if re.match('[^0-9 :-\\\+]', pubdate_temp) != 0:
+                        item_pubDate.text = re.sub(r'(\+\d{2}):(\d{2})', '', pubdate_temp)
+                        vtext = []
+                    else:
+                        item_pubDate.text = time.strftime(ISOTIMEFORMAT, time.localtime(time.time()))
+                        vtext = []
+                        vtext.append('<br/><p style="color:rgb(255,0,0);font-size:30px;">Please check your pubDate regex</p>')
                 else:
                     item_pubDate.text = time.strftime(ISOTIMEFORMAT, time.localtime(time.time()))
                     vtext = []
                     vtext.append('<br/><p style="color:rgb(255,0,0);font-size:30px;">Please check your pubDate regex</p>')
             else:
                 item_pubDate.text = time.strftime(ISOTIMEFORMAT, time.localtime(time.time()))
-                vtext = []
-                vtext.append('<br/><p style="color:rgb(255,0,0);font-size:30px;">Please check your pubDate regex</p>')
 
             if len(re.findall(reg4text, SeiteQuelle)) != 0:
                 #判断正文正则是否只有一组
@@ -212,7 +221,7 @@ def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, re
 
         return re.sub(r'(<|&#60;|&lt;)(/|)(body|html)(>|&#62;|&gt;)', '', unescape(etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8')))
 
-    #打不开网页时返回错误
+    #打不开网页、reg4site失效时返回错误
     else:
         f = open('main/Vorlage_Error.xml')
         root = etree.XML(f.read(), etree.XMLParser(remove_blank_text=True))
