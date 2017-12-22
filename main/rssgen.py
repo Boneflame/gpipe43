@@ -76,12 +76,13 @@ def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, re
                 time.sleep(float(random.sample(range(4,10),1)[0]))
 
         #把相对路径转为绝对路径
-        if isinstance(urlgen, tuple) is True:		#如果有自定义的url转换函数，则调用它
-            artikelurllist = urlgen[0](pathlist)
-        elif re.search(r'://', pathlist[0]):
-            artikelurllist = pathlist
+        if re.search('[^0-9]', pathlist[0]):		#如果有自定义的url转换函数，则调用它
+            if re.search(r'://', pathlist[0]):
+                artikelurllist = pathlist
+            else:
+                artikelurllist = [urlparse.urljoin(siteurl[0], path) for path in pathlist]
         else:
-            artikelurllist = [urlparse.urljoin(siteurl[0], path) for path in pathlist]
+            artikelurllist = urlgen[0](pathlist)
 
         #获得文章url后休息，以防被ban
         time.sleep(float(random.sample(range(4, 9), 1)[0]))
