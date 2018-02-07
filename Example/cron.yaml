@@ -1,0 +1,12 @@
+cron:
+
+#crawler run under:
+#http://example.appsopt.com/run/bilibili_zl_douga
+
+#feed address:
+#http://example.appsopt.com/feed/bilibili_zl_douga
+
+- description: bilibili zhuanlan douga
+  url: /run/bilibili_zl_douga
+  schedule: every 3 hours from 07:00 to 22:00
+  timezone: Asia/Shanghai

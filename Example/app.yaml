@@ -1,0 +1,30 @@
+#application: example
+#version: 1.24
+runtime: python27
+api_version: 1
+threadsafe: true
+
+libraries:
+- name: lxml
+  version: "latest"
+
+handlers:
+
+- url: /favicon\.ico
+  static_files: static/images/favicon.ico
+  upload: static/images/favicon\.ico
+
+######  config start
+
+#crawler run under:
+#http://example.appsopt.com/run/bilibili_zl_douga
+
+#feed address:
+#http://example.appsopt.com/feed/bilibili_zl_douga
+
+- url: /run/bilibili_zl_douga
+  script: bilibili_zl_douga.app
+- url: /feed/bilibili_zl_douga
+  script: feed_list.bilibili
+
+######  config end 

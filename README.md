@@ -20,7 +20,7 @@ Simple quickstart
 ### Edit config.py
 * `prjname`: Name of your project on app engine
 * `bucket_name`: Name of bucket
-* `subdir4bg`: The crawler working under http://[prjname].appspot.com/[subdir4bg]/[rssname]
+* `subdir4bg`: The crawler working under: http://[prjname].appspot.com/[subdir4bg]/[rssname]
 * `subdir4rss`: This is your RSS site: http://[prjname].appspot.com/[subdir4rss]/[rssname]
 ### Edit example.py，replace 'example' to your own RSS's name
 * `rssname`: Your own RSS's name
@@ -49,6 +49,14 @@ See official guide: [app.yaml Reference](https://cloud.google.com/appengine/docs
 
 ### Optional
 * Edit ./main/Vorlage.xml and Vorlage_Error.xml, you can the properties of elements 'generator', 'webMaster' and 'copyright' to your own.
+
+Test
+====
+    dev_appserver.py [PATH_TO_YOUR_APP]/app.yaml<br>
+Start the crawler: http://localhost:8080/[subdir4bg]/[rssname]<br>
+When done, here to check your RSS: http://localhost:8080/[subdir4rssg]/[rssname]
+
+See official guide: [Using the Local Development Server](https://cloud.google.com/appengine/docs/standard/python/tools/using-local-server)
 
 Upload to app engine
 ====

@@ -10,12 +10,12 @@ import cloudstorage as gcs
 '''config start'''
 ''''''''''''''''''
 
-rssname = ''
-siteurl = ['']
-reg4site = ''
-reg4title = ''	
-reg4pubdate = ''
-reg4text = ''
+rssname = 'bilibili_zl_douga'
+siteurl = ['https://www.bilibili.com/read/douga?from=articleDetail']
+reg4site = '<a title=".*?href="(.*?)"'
+reg4title = '<title>(.*?)</title>'	
+reg4pubdate = ''	#no date info in article's page source
+reg4text = '<div class="article-holder">[\S\s]+?<p class="authority">'
 reg4comment = ''
 reg4nextpage = ''
 Anzahl = 10
@@ -23,10 +23,7 @@ Anzahl = 10
 
 def filter():
     result = rssgen.ausfuehren('use_urllib', 'mt', siteurl, reg4site, reg4title, reg4pubdate, reg4text, reg4comment, reg4nextpage, Anzahl)
-#    result = feed_fulltext.ausfuehren('use_urllib/use_urlfetch', siteurl, reg4nextpage, reg4text, reg4comment, Anzahl, rssname)
-    #format output if you want
-#    result = re.aub('', '', result)
-#    result = re.aub('', '', result)
+    result = re.sub('<div.*?>', '', result).replace('</div>', '')
     return result
 
 ''''''''''''''''''

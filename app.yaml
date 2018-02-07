@@ -15,20 +15,16 @@ handlers:
   upload: static/images/favicon\.ico
 
 
-'''''''''''''''''''''
-''' config start  '''
-'''''''''''''''''''''
+######  config start  ######
 
 - url: /[subdir4bg]/example1
-  script: example1.app		#site for cron
+  script: example1.app		
 - url: /[subdir4rss]/example1
-  script: feed_list.example1	#feed site
+  script: feed_list.example1	
 
 - url: /[subdir4bg]/example2
-  script: example2.app		#site for cron
+  script: example2.app		
 - url: /[subdir4rss]/example2
-  script: feed_list.example2	#feed site
+  script: feed_list.example2	
 
-''''''''''''''''''
-''' config end '''
-''''''''''''''''''
+######  config end  ######
