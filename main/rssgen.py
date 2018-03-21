@@ -141,7 +141,7 @@ def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, re
                 item_title.text = 'ERROR! QwQ'
                 item_description.text = '<br/><p style="color:rgb(255,0,0);font-size:30px;">' + SeiteQuelle + '</p>'
             else:
-                item_title.text = 'Please check your regex'
+                item_title.text = 'No title, please check regex'
 
             if len(reg4pubdate) != 0:
                 if len(re.findall(reg4pubdate, SeiteQuelle)) != 0:
@@ -154,11 +154,11 @@ def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, re
                     else:
                         item_pubDate.text = time.strftime(ISOTIMEFORMAT, time.localtime(time.time()))
                         vtext = []
-                        vtext.append('<br/><p style="color:rgb(255,0,0);font-size:30px;">Please check your pubDate regex</p>')
+                        vtext.append('<br/><p style="color:rgb(255,0,0);font-size:30px;">Please check pubDate regex</p>')
                 else:
                     item_pubDate.text = time.strftime(ISOTIMEFORMAT, time.localtime(time.time()))
                     vtext = []
-                    vtext.append('<br/><p style="color:rgb(255,0,0);font-size:30px;">Please check your pubDate regex</p>')
+                    vtext.append('<br/><p style="color:rgb(255,0,0);font-size:30px;">Please check pubDate regex</p>')
             else:
                 item_pubDate.text = time.strftime(ISOTIMEFORMAT, time.localtime(time.time()))
 
@@ -192,7 +192,7 @@ def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, re
 
             elif re.search(r'ERROR! QwQ', SeiteQuelle): pass		#在title处已填description
             else:
-                item_description.text = '<br/><p style="color:rgb(255,0,0);font-size:30px;">Please check your regex</p>'
+                item_description.text = '<br/><p style="color:rgb(255,0,0);font-size:30px;">Please check regex</p>'
 
             rsschannel.addnext(rssitem)
 
