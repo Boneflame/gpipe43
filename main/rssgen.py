@@ -17,12 +17,12 @@ ISOTIMEFORMAT = '%a, %e %b %Y %H:%M:%S %z'
 
 
 '''''''''''''''''''''
-从网页抓全文并生成RSS
+Crawl from website(not from a feed) and generate RSS
 
 '''''''''''''''''''''
 
 
-#多线程
+#multi treading crawl
 def run_itemgen_mt(lib_or_fetch, encoding, itemgen, x, artikelurllist, reg4title, reg4pubdate, reg4text, reg4comment, reg4nextpage):
 #    for i in range(0, x)[::-1]:
     for i in random.sample(range(0, x), x):
@@ -33,7 +33,7 @@ def run_itemgen_mt(lib_or_fetch, encoding, itemgen, x, artikelurllist, reg4title
         time.sleep(float(random.sample(range(1, 6), 1)[0]))
 
 
-#单线程
+#single treading crawl
 def run_itemgen_st(lib_or_fetch, encoding, itemgen, x, artikelurllist, reg4title, reg4pubdate, reg4text, reg4comment, reg4nextpage):
 #    for i in range(0, x)[::-1]:
     for i in random.sample(range(0, x), x):
@@ -42,7 +42,7 @@ def run_itemgen_st(lib_or_fetch, encoding, itemgen, x, artikelurllist, reg4title
         time.sleep(float(random.sample(range(1, 6), 1)[0]))
 
 
-#从网页抓
+#main part
 def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, reg4text, reg4comment, reg4nextpage, Anzahl, *urlgen):
     if lib_or_fetch == 'use_urlfetch':
         lib_or_fetch = urlfetch_ps.pagesource
@@ -57,20 +57,32 @@ def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, re
         page_source = page_source.decode(encoding, 'ignore')
     except TypeError: pass
 
-    pathlist = []
     pathlist = re.findall(reg4site, page_source)
+
     if len(pathlist) != 0:
+        #限制抓取的文章数
+        l0 = len(pathlist)
+        if Anzahl == 0 or Anzahl >= l0: pass
+        elif Anzahl < l0:
+            pathlist = pathlist[0:Anzahl]
+
         lll = len(siteurl)
         if lll == 1: pass
+
         else:
             #先找出第一个siteurl里的文章地址，再找其余siteurl的
-            for u in re.findall(reg4site, page_source):
-                pathlist.append(u)
             siteurl.pop(0)
             lll = lll-1
             time.sleep(float(random.sample(range(4,10),1)[0]))
             for i in random.sample(siteurl,lll):
-                mmm = re.findall(reg4site, lib_or_fetch(i)[0])
+                mmm = re.findall(reg4site, lib_or_fetch(i))
+
+                #限制抓取的文章数
+                l1 = len(mmm)
+                if Anzahl == 0 or Anzahl >= l1: pass
+                elif Anzahl < l1:
+                    mmm = mmm[0:Anzahl]
+
                 for j in mmm:
                     pathlist.append(j)
                 time.sleep(float(random.sample(range(4,10),1)[0]))
@@ -83,6 +95,7 @@ def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, re
                 artikelurllist = [urlparse.urljoin(siteurl[0], path) for path in pathlist]
         else:
             artikelurllist = urlgen[0](pathlist)
+
 
         #获得文章url后休息，以防被ban
         time.sleep(float(random.sample(range(4, 9), 1)[0]))
@@ -138,10 +151,11 @@ def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, re
                 except ValueError:
                     item_title.text = CDATA("".join(tmp_title).decode(encoding))
             elif re.search(r'ERROR! QwQ', SeiteQuelle):
-                item_title.text = 'ERROR! QwQ'
-                item_description.text = '<br/><p style="color:rgb(255,0,0);font-size:30px;">' + SeiteQuelle + '</p>'
+                item_title.text = artikelurl
+                item_description.text = SeiteQuelle
             else:
                 item_title.text = 'No title, please check regex'
+                item_description.text = artikelurl
 
             if len(reg4pubdate) != 0:
                 if len(re.findall(reg4pubdate, SeiteQuelle)) != 0:
@@ -154,11 +168,11 @@ def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, re
                     else:
                         item_pubDate.text = time.strftime(ISOTIMEFORMAT, time.localtime(time.time()))
                         vtext = []
-                        vtext.append('<br/><p style="color:rgb(255,0,0);font-size:30px;">Please check pubDate regex</p>')
+                        vtext.append('<span style="color:#ff0000;font-size:30px;">Please check pubDate regex</span><br/><br/>')
                 else:
                     item_pubDate.text = time.strftime(ISOTIMEFORMAT, time.localtime(time.time()))
                     vtext = []
-                    vtext.append('<br/><p style="color:rgb(255,0,0);font-size:30px;">Please check pubDate regex</p>')
+                    vtext.append('<span style="color:#ff0000;font-size:30px;">Please check pubDate regex</span><br/><br/>')
             else:
                 item_pubDate.text = time.strftime(ISOTIMEFORMAT, time.localtime(time.time()))
 
@@ -192,7 +206,7 @@ def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, re
 
             elif re.search(r'ERROR! QwQ', SeiteQuelle): pass		#在title处已填description
             else:
-                item_description.text = '<br/><p style="color:rgb(255,0,0);font-size:30px;">Please check regex</p>'
+                item_description.text = '<span style="color:#ff0000;font-size:30px;">Please check regex</span>'
 
             rsschannel.addnext(rssitem)
 
@@ -201,12 +215,8 @@ def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, re
         else:
             func = run_itemgen_mt
 
-        #限制抓取的文章数
         l = len(artikelurllist)
-        if Anzahl == 0 or Anzahl >= l:
-            func(lib_or_fetch, encoding, itemgen, l, artikelurllist, reg4title, reg4pubdate, reg4text, reg4comment, reg4nextpage)
-        elif Anzahl < l:
-            func(lib_or_fetch, encoding, itemgen, Anzahl, artikelurllist, reg4title, reg4pubdate, reg4text, reg4comment, reg4nextpage)
+        func(lib_or_fetch, encoding, itemgen, l, artikelurllist, reg4title, reg4pubdate, reg4text, reg4comment, reg4nextpage)
 
         #判断时间格式并格式化
         l = len(root.xpath('//pubDate'))+1
@@ -232,7 +242,7 @@ def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, re
         root.xpath('/rss/channel/description')[0].text = siteurl[0]
         root.xpath('/rss/channel/lastBuildDate')[0].text = time.strftime(ISOTIMEFORMAT, time.localtime(time.time()))
 
-        root.xpath('//item[1]/description')[0].text = page_source.decode('utf-8')
+        root.xpath('//item[1]/description')[0].text = page_source
         root.xpath('//item[1]/link')[0].text = siteurl[0]
         root.xpath('//item[1]/guid')[0].text = siteurl[0]
         root.xpath('//item[1]/pubDate')[0].text = time.strftime(ISOTIMEFORMAT, time.localtime(time.time()))

@@ -12,6 +12,7 @@ Prepare
 ====
 * [Create a new Cloud Platform project and App Engine application](https://cloud.google.com/appengine/docs/standard/python/quickstart)
 * [Create a bucket in google cloud storage](https://cloud.google.com/storage/docs/quickstart-console)
+* [Install Google Cloud SDK Python](https://cloud.google.com/sdk/docs/)
 
 Simple quickstart
 ====
@@ -23,17 +24,17 @@ Simple quickstart
 * `subdir4bg`: The crawler working under: http://[prjname].appspot.com/[subdir4bg]/[rssname]
 * `subdir4rss`: This is your RSS site: http://[prjname].appspot.com/[subdir4rss]/[rssname]
 ### Edit example.py，replace 'example' to your own RSS's name
-* `rssname`: Your own RSS's name
-* `siteurl`: The website that you want to generat RSS
-* `reg4site`: Regex that can find articles' URL<br><br>
-* `reg4title`: Regex for title in a article
-* `reg4pubdate`: Regex for publish date in a article
-* `reg4text`: Regex for text
-* `reg4comment`: Regex for comment. Not necessary, can leave it blank. You can also use this Regex to find all the image of a gallery in the text.
-* `reg4nextpage`: Regex for arctile's next page, can leave it blank.
-* `Anzahl`: How much article will be generated. 0 = no limit<br><br>
-* `rssgen.ausfuehren('use_urllib/use_urlfetch', 'st/mt', siteurl, reg4site, reg4title, reg4pubdate, reg4text, reg4comment, reg4nextpage, Anzahl)`: Generat a RSS for a website
-* `feed_fulltext.ausfuehren('use_urllib/use_urlfetch', siteurl, reg4nextpage, reg4text, reg4comment, Anzahl, rssname)`: Use this to generat fulltext for a RSS feed.
+* `rssname`: Your own RSS's name.
+* `siteurl`: The website that you want to generat RSS.
+* `reg4site`: Regex that can find articles' URL.<br><br>
+* `reg4title`: Regex for title of a article.
+* `reg4pubdate`: Regex for publish date of a article. The format of pubdate must contain '%Y-%m-%d', otherwise leave a blank.
+* `reg4text`: Regex for main body of a article.
+* `reg4comment`: Regex for comment. Not necessary, can leave it blank. You can also use this Regex to find all the image of a gallery in the main body.
+* `reg4nextpage`: Regex for article's next page if there's more than one page.
+* `Anzahl`: How much article will be generated. If there's not only one siteurl, that mean's this limit for EVERY siteurl. 0 = no limit.<br><br>
+* `rssgen.ausfuehren('use_urllib/use_urlfetch', 'st/mt', siteurl, reg4site, reg4title, reg4pubdate, reg4text, reg4comment, reg4nextpage, Anzahl)`: Generat a RSS from a website.
+* `feed_fulltext.ausfuehren('use_urllib/use_urlfetch', siteurl, reg4nextpage, reg4text, reg4comment, Anzahl, rssname)`: Use this to generat fulltext from a RSS feed.
 	* `use_urllib`: Use urllib2，with UA
 	* `use_urlfetch`: Use urlfetch，no UA
 	* `mt`: Multi threading
@@ -48,11 +49,11 @@ Simple quickstart
 See official guide: [app.yaml Reference](https://cloud.google.com/appengine/docs/standard/python/config/appref), [Scheduling Tasks With Cron for Python](https://cloud.google.com/appengine/docs/standard/python/config/cron)
 
 ### Optional
-* Edit ./main/Vorlage.xml and Vorlage_Error.xml, you can the properties of elements 'generator', 'webMaster' and 'copyright' to your own.
+* Edit ./main/Vorlage.xml and Vorlage_Error.xml, you can fill the properties of elements 'generator', 'webMaster' and 'copyright'.
 
 Test
 ====
-    dev_appserver.py [PATH_TO_YOUR_APP]/app.yaml<br>
+    dev_appserver.py [PATH_TO_YOUR_APP]/app.yaml
 Start the crawler: http://localhost:8080/[subdir4bg]/[rssname]<br>
 When done, here to check your RSS: http://localhost:8080/[subdir4rssg]/[rssname]
 
