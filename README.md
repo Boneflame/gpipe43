@@ -32,7 +32,7 @@ Simple quickstart
 * `reg4text`: Regex for main body of a article.
 * `reg4comment`: Regex for comment. Not necessary, can leave it blank. You can also use this Regex to find all the image of a gallery in the main body.
 * `reg4nextpage`: Regex for article's next page if there's more than one page.
-* `Anzahl`: How much article will be generated. If there's not only one siteurl, that mean's this limit for EVERY siteurl. 0 = no limit.<br><br>
+* `Anzahl`: How much article will be generated. If there's not only one siteurl, this limit for EVERY SINGLE siteurl instead of for all articleurl from all siteurl. 0 = no limit.<br><br>
 * `rssgen.ausfuehren('use_urllib/use_urlfetch', 'st/mt', siteurl, reg4site, reg4title, reg4pubdate, reg4text, reg4comment, reg4nextpage, Anzahl)`: Generat a RSS from a website.
 * `feed_fulltext.ausfuehren('use_urllib/use_urlfetch', siteurl, reg4nextpage, reg4text, reg4comment, Anzahl, rssname)`: Use this to generat fulltext from a RSS feed.
 	* `use_urllib`: Use urllib2，with UA
