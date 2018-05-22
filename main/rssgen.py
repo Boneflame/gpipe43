@@ -228,7 +228,12 @@ def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, re
             elif re.search('\d{2}:\d{2}', zeit):
                 root.xpath('//item[$i]/pubDate', i = Nummer)[0].text = time.strftime(ISOTIMEFORMAT, time.localtime(time.mktime(time.strptime(zeit, '%Y-%m-%d %H:%M'))))
             else:
-                root.xpath('//item[$i]/pubDate', i = Nummer)[0].text = time.strftime(ISOTIMEFORMAT, time.localtime(time.mktime(time.strptime(zeit, '%Y-%m-%d'))))
+                try:
+                    root.xpath('//item[$i]/pubDate', i = Nummer)[0].text = time.strftime(ISOTIMEFORMAT, time.localtime(time.mktime(time.strptime(zeit, '%Y-%m-%d'))))
+                except ValueError:
+                    root.xpath('//item[$i]/pubDate', i = Nummer)[0].text = time.strftime(ISOTIMEFORMAT, time.localtime(time.mktime(time.strptime(zeit, '%m-%d-%Y'))))
+                except ValueError:
+                    root.xpath('//item[$i]/pubDate', i = Nummer)[0].text = time.strftime(ISOTIMEFORMAT, time.localtime(time.mktime(time.strptime(zeit, '%d-%m-%Y'))))
 
         return re.sub(r'(<|&#60;|&lt;)(/|)(body|html)(>|&#62;|&gt;)', '', unescape(etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8')))
 
