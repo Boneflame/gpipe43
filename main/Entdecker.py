@@ -35,7 +35,13 @@ def ausfuehren(lib_or_fetch, SeiteQuelle, reg4nextpage, reg4text, reg4comment, v
         #判断正文正则结果是否只有一组
         if isinstance(re.findall(reg4text, SeiteQuelle)[0], tuple) is False:
             while re.search(reg4nextpage, SeiteQuelle):
-                artikelurl = re.findall(reg4nextpage, SeiteQuelle)[0]
+                artikelurl_temp = re.findall(reg4nextpage, SeiteQuelle)[0]
+
+                if re.search(r'://', artikelurl_temp):
+                    artikelurl = artikelurl_temp
+                else:
+                    artikelurl = urlparse.urljoin(artikelurl, artikelurl_temp)
+
                 SeiteQuelle = lib_or_fetch(artikelurl)
                 Content = re.findall(reg4text, SeiteQuelle)
                 if len(Content) != 0:
@@ -48,7 +54,13 @@ def ausfuehren(lib_or_fetch, SeiteQuelle, reg4nextpage, reg4text, reg4comment, v
 
         else:
             while re.search(reg4nextpage, SeiteQuelle):
-                artikelurl = re.findall(reg4nextpage, SeiteQuelle)[0]
+                artikelurl_temp = re.findall(reg4nextpage, SeiteQuelle)[0]
+
+                if re.search(r'://', artikelurl_temp):
+                    artikelurl = artikelurl_temp
+                else:
+                    artikelurl = urlparse.urljoin(artikelurl, artikelurl_temp)
+
                 SeiteQuelle = lib_or_fetch(artikelurl)
                 Content = re.findall(reg4text, SeiteQuelle)
                 if len(Content) != 0:
