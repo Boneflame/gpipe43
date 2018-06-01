@@ -24,13 +24,13 @@ Simple quickstart
 * `subdir4bg`: The crawler working under: http://[prjname].appspot.com/[subdir4bg]/[rssname]
 * `subdir4rss`: This is your RSS site: http://[prjname].appspot.com/[subdir4rss]/[rssname]
 ### Edit example.py，replace 'example' to your own RSS's name
-* `rssname`: Your own RSS's name.
-* `siteurl`: The website that you want to generat RSS.
-* `reg4site`: Regex that can find articles' URL.<br><br>
-* `reg4title`: Regex for title of a article.
-* `reg4pubdate`: Regex for publish date of a article. The format of pubdate must contain '%Y-%m-%d', otherwise leave a blank.
+* `rssname`: RSS's name.
+* `siteurl`: The website or a RSS feed that you want to generat fulltext RSS.
+* `reg4site`: Regex that can find articles' URL. Leave a blank if siteurl is a feed.
+* `reg4title`: Regex for title of a article. Leave a blank if siteurl is a feed.
+* `reg4pubdate`: Regex for publish date of a article. Leave a blank if siteurl is a feed. The format of pubdate must contain '%Y-%m-%d', otherwise leave a blank.
 * `reg4text`: Regex for main body of a article.
-* `reg4comment`: Regex for comment. Not necessary, can leave it blank. You can also use this Regex to find all the image of a gallery in the main body.
+* `reg4comment`: Regex for comment. Not necessary, can leave it blank. You can also use this Regex to find all the image of a gallery in the article.
 * `reg4nextpage`: Regex for article's next page if there's more than one page.
 * `Anzahl`: How much article will be generated. If there's not only one siteurl, this limit for EVERY SINGLE siteurl instead of for all articleurl from all siteurl. 0 = no limit.<br><br>
 * `rssgen.ausfuehren('use_urllib/use_urlfetch', 'st/mt', siteurl, reg4site, reg4title, reg4pubdate, reg4text, reg4comment, reg4nextpage, Anzahl)`: Generat a RSS from a website.
