@@ -33,12 +33,20 @@ def ausfuehren(lib_or_fetch, siteurl, reg4nextpage, reg4text, reg4comment, Anzah
 
     rss = lib_or_fetch(siteurl[0])
     if re.search(r'ERROR! QwQ', rss):
-        root = etree.XML(lib_or_fetch('http://' + prjname + '.appspot.com' + subdir4rss + '/' + rssname), etree.XMLParser(recover=True)[0])
-        root.xpath('//item[1]/description')[0].text = CDATA('<br/><p><span style="color:rgb(255,0,0);font-size:30px;">' + rss + '</span></p>')
-        root.xpath('//item[1]/title')[0].text = CDATA(rss)
-        return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding='UTF-8')
+        f = open('main/Vorlage_Error.xml')
+        root = etree.XML(f.read(), etree.XMLParser(remove_blank_text=True))
+        f.close()
+        root.xpath('/rss/channel/title')[0].text = siteurl[0]
+        root.xpath('/rss/channel/link')[0].text = siteurl[0]
+        root.xpath('/rss/channel/description')[0].text = siteurl[0]
+        root.xpath('/rss/channel/lastBuildDate')[0].text = time.strftime(ISOTIMEFORMAT, time.localtime(time.time()))
+
+        root.xpath('//item[1]/description')[0].text = rss
+        root.xpath('//item[1]/link')[0].text = siteurl[0]
+        root.xpath('//item[1]/guid')[0].text = siteurl[0]
+        root.xpath('//item[1]/pubDate')[0].text = time.strftime(ISOTIMEFORMAT, time.localtime(time.time()))
+        return etree.tostring(root, pretty_print=True, xml_declaration=True, encoding="UTF-8")
     else:
-#        root = etree.XML(rss, etree.XMLParser(encoding='utf-8', recover=True))
         root = etree.XML(rss, etree.XMLParser(recover=True))
         l = len(root.xpath('//item'))
 
@@ -61,23 +69,20 @@ def ausfuehren(lib_or_fetch, siteurl, reg4nextpage, reg4text, reg4comment, Anzah
                     vtext = [txt_tmp[0]]	#移除decode('utf-8')
 
                 comments = ''
-                Ergebnis = Entdecker.ausfuehren(lib_or_fetch, SeiteQuelle, reg4nextpage, reg4text, reg4comment, vtext, comments)
+                Ergebnis = Entdecker.ausfuehren(lib_or_fetch, artikelurl, SeiteQuelle, reg4nextpage, reg4text, reg4comment, vtext, comments)
+                Haupttext = "".join(Ergebnis[0]).replace(r'<![CDATA\[', '').replace(r']]>', '')
 #                print comments
 
                 if len(reg4comment) == 0:
                     try:
-                        root.xpath('//item[$i]/description', i = Nummer)[0].text = CDATA("".join(Ergebnis[0]))
+                        root.xpath('//item[$i]/description', i = Nummer)[0].text = CDATA(Haupttext)
                     except ValueError:
-#                        root.xpath('//item[$i]/description', i = Nummer)[0].text = CDATA("".join(Ergebnis[0]).decode(encoding))
-#                    except UnicodeDecodeError:
-                        root.xpath('//item[$i]/description', i = Nummer)[0].text = CDATA(remove_control_characters("".join(Ergebnis[0]).decode(encoding, 'replace')))
+                        root.xpath('//item[$i]/description', i = Nummer)[0].text = CDATA(remove_control_characters(Haupttext.decode(encoding, 'replace')))
                 else:
                     try:
-                        root.xpath('//item[$i]/description', i = Nummer)[0].text = CDATA("".join(Ergebnis[0]) + Ergebnis[1])
+                        root.xpath('//item[$i]/description', i = Nummer)[0].text = CDATA(Haupttext + Ergebnis[1])
                     except ValueError:
-#                        root.xpath('//item[$i]/description', i = Nummer)[0].text = CDATA("".join(Ergebnis[0]).decode(encoding) + Ergebnis[1].decode(encoding))
-#                    except UnicodeDecodeError:
-                        root.xpath('//item[$i]/description', i = Nummer)[0].text = CDATA(remove_control_characters("".join(Ergebnis[0]).decode(encoding, 'replace') + Ergebnis[1].decode(encoding, 'replace')))
+                        root.xpath('//item[$i]/description', i = Nummer)[0].text = CDATA(remove_control_characters(Haupttext.decode(encoding, 'replace') + Ergebnis[1].decode(encoding, 'replace')))
 
 
             elif re.search(r'ERROR! QwQ', SeiteQuelle):
@@ -88,7 +93,6 @@ def ausfuehren(lib_or_fetch, siteurl, reg4nextpage, reg4text, reg4comment, Anzah
 
         #限制抓取的文章数
         if Anzahl == 0 or Anzahl >= l:
-#            for Nummer in range(1, l+1):
             for Nummer in random.sample(range(1, l+1), l):
                 t = threading.Thread(target=rssmodi, args=(lib_or_fetch, reg4nextpage, reg4text, reg4comment, root))
                 t.start()
@@ -98,7 +102,6 @@ def ausfuehren(lib_or_fetch, siteurl, reg4nextpage, reg4text, reg4comment, Anzah
             for x in range(Anzahl+1, l+1)[::-1]:
                 item = root.xpath('//item[$i]', i = x)[0]
                 item.getparent().remove(item)
-#            for Nummer in range(1, Anzahl+1):
             for Nummer in random.sample(range(1, Anzahl+1), Anzahl):
                 t = threading.Thread(target=rssmodi, args=(lib_or_fetch, reg4nextpage, reg4text, reg4comment, root))
                 t.start()
