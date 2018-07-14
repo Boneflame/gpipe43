@@ -68,10 +68,13 @@ Upload to app engine
 See official guide: [Deploying a Python App](https://cloud.google.com/appengine/docs/standard/python/tools/uploadinganapp)
 
 
-Some Examples
+Examples
 ====
 * [Autoblog](http://misaka19003.appspot.com/feed/autoblog)
 * [Auto Motor und Sport](http://misaka19003.appspot.com/feed/ams)
+* [Motor1](http://misaka19003.appspot.com/feed/motor1)
+* [OMG!Ubuntu](http://misaka19002.appspot.com/feed/omgubuntu)
 * [Engadget中文版](http://misaka19002.appspot.com/feed/engadgetcn)
 * [游民星空|单机游戏](http://misaka19002.appspot.com/feed/gamersky_pcgame)
+* [游戏时光](http://misaka19002.appspot.com/feed/vgtime)
 * [Acfun文章区|动漫文化](http://misaka19002.appspot.com/feed/acfun)
