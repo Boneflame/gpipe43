@@ -58,8 +58,8 @@ class EUCJPProber(MultiByteCharSetProber):
             # PY3K: byte_str is a byte array, so byte_str[i] is an int, not a byte
             coding_state = self.coding_sm.next_state(byte_str[i])
             if coding_state == MachineState.ERROR:
-#                self.logger.debug('%s %s prober hit error at byte %s',
-#                                  self.charset_name, self.language, i)
+                self.logger.debug('%s %s prober hit error at byte %s',
+                                  self.charset_name, self.language, i)
                 self._state = ProbingState.NOT_ME
                 break
             elif coding_state == MachineState.ITS_ME:
