@@ -7,12 +7,13 @@ import urllib_ps
 import re
 import random
 import time
+import urlparse
 
 '''''''''''''''
 抓正文及评论
 '''''''''''''''
 
-def ausfuehren(lib_or_fetch, SeiteQuelle, reg4nextpage, reg4text, reg4comment, vtext, comments):
+def ausfuehren(lib_or_fetch, artikelurl, SeiteQuelle, reg4nextpage, reg4text, reg4comment, vtext, comments):
     #无评论
     if len(reg4comment) == 0: pass
     #有评论
@@ -47,9 +48,9 @@ def ausfuehren(lib_or_fetch, SeiteQuelle, reg4nextpage, reg4text, reg4comment, v
                 if len(Content) != 0:
                     vtext.append(Content[0])	#移除decode('utf-8')
                 elif re.search(r'ERROR! QwQ', SeiteQuelle):
-                    vtext.append('<br/><p style="color:rgb(255,0,0);font-size:30px;">' + SeiteQuelle + '</p>')	#移除decode('utf-8') #error信息可能需要添加decode
+                    vtext.append('<span style="color:#ff0000;font-size:30px;">' + SeiteQuelle + '</span>')
                 else:
-                    vtext.append('<br/><p style="color:rgb(255,0,0);font-size:30px;">Please check your regex</p>')
+                    vtext.append('<span style="color:#ff0000;font-size:30px;">Please check your regex</span>')
                 time.sleep(float(random.sample(range(1, 6), 1)[0]))
 
         else:
@@ -68,9 +69,9 @@ def ausfuehren(lib_or_fetch, SeiteQuelle, reg4nextpage, reg4text, reg4comment, v
                     for e in txt_temp:
                         vtext.append("".join(e))	#移除decode('utf-8')
                 elif re.search(r'ERROR! QwQ', SeiteQuelle):
-                    vtext.append('<br/><p style="color:rgb(255,0,0);font-size:30px;">' + SeiteQuelle + '</p>')	#移除decode('utf-8') #error信息可能需要添加decode
+                    vtext.append('<span style="color:#ff0000;font-size:30px;">' + SeiteQuelle + '</span>')
                 else:
-                    vtext.append('<br/><p style="color:rgb(255,0,0);font-size:30px;">Please check your regex</p>')
+                    vtext.append('<span style="color:#ff0000;font-size:30px;">Please check your regex</span>')
                 time.sleep(float(random.sample(range(1, 6), 1)[0]))
 
 

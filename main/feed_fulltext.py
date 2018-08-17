@@ -14,8 +14,6 @@ import time
 from lxml import etree
 from lxml.etree import CDATA
 from xml.sax.saxutils import unescape
-from HTMLParser import HTMLParser
-h = HTMLParser()
 ISOTIMEFORMAT = '%a, %e %b %Y %H:%M:%S %z'
 
 
@@ -84,12 +82,11 @@ def ausfuehren(lib_or_fetch, siteurl, reg4nextpage, reg4text, reg4comment, Anzah
                     except ValueError:
                         root.xpath('//item[$i]/description', i = Nummer)[0].text = CDATA(remove_control_characters(Haupttext.decode(encoding, 'replace') + Ergebnis[1].decode(encoding, 'replace')))
 
-
             elif re.search(r'ERROR! QwQ', SeiteQuelle):
-                root.xpath('//item[$i]/description', i = Nummer)[0].text = '<br/><p><span style="color:rgb(255,0,0);font-size:30px;">' + SeiteQuelle + '</span></p>'	#移除decode('utf-8') #error信息可能需要添加decode
+                root.xpath('//item[$i]/description', i = Nummer)[0].text = '<span style="color:rgb(255,0,0);font-size:30px;">' + SeiteQuelle + '</span>'	#移除decode('utf-8') #error信息可能需要添加decode
             #regex无效
             else:
-                root.xpath('//item[$i]/description', i = Nummer)[0].text = '<br/><p><span style="color:rgb(255,0,0);font-size:30px;">Error: Please update regex</span></p>'
+                root.xpath('//item[$i]/description', i = Nummer)[0].text = '<span style="color:rgb(255,0,0);font-size:30px;">Error: Please check regex</span>'
 
         #限制抓取的文章数
         if Anzahl == 0 or Anzahl >= l:
