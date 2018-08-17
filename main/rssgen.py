@@ -24,7 +24,6 @@ Crawl from website(not from a feed) and generate RSS
 
 #multi treading crawl
 def run_itemgen_mt(lib_or_fetch, encoding, itemgen, x, artikelurllist, reg4title, reg4pubdate, reg4text, reg4comment, reg4nextpage):
-#    for i in range(0, x)[::-1]:
     for i in random.sample(range(0, x), x):
         artikelurl = artikelurllist[i]
         t = threading.Thread(target=itemgen, args=(lib_or_fetch, encoding, artikelurl, reg4title, reg4pubdate, reg4text, reg4comment, reg4nextpage))
@@ -35,7 +34,6 @@ def run_itemgen_mt(lib_or_fetch, encoding, itemgen, x, artikelurllist, reg4title
 
 #single treading crawl
 def run_itemgen_st(lib_or_fetch, encoding, itemgen, x, artikelurllist, reg4title, reg4pubdate, reg4text, reg4comment, reg4nextpage):
-#    for i in range(0, x)[::-1]:
     for i in random.sample(range(0, x), x):
         artikelurl = artikelurllist[i]
         itemgen(lib_or_fetch, encoding, artikelurl, reg4title, reg4pubdate, reg4text, reg4comment, reg4nextpage)
@@ -77,7 +75,7 @@ def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, re
             for i in random.sample(siteurl,lll):
                 mmm = re.findall(reg4site, lib_or_fetch(i))
 
-                #限制抓取的文章数
+                #限制抓取的文章数（siteurl有多组时）
                 l1 = len(mmm)
                 if Anzahl == 0 or Anzahl >= l1: pass
                 elif Anzahl < l1:
@@ -87,12 +85,13 @@ def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, re
                     pathlist.append(j)
                 time.sleep(float(random.sample(range(4,10),1)[0]))
 
-        #把相对路径转为绝对路径
+        #把相对路径转为绝对路径。有的网站不是所有文章的url都全部是相对或绝对路径，故全部都用urlprase处理一遍
         if re.search('[^0-9]', pathlist[0]):		#如果有自定义的url转换函数，则调用它
-            if re.search(r'://', pathlist[0]):
-                artikelurllist = pathlist
-            else:
-                artikelurllist = [urlparse.urljoin(siteurl[0], path) for path in pathlist]
+#            if re.search(r'://', pathlist[0]):
+#                artikelurllist = pathlist
+#            else:
+#                artikelurllist = [urlparse.urljoin(siteurl[0], path) for path in pathlist]
+            artikelurllist = [urlparse.urljoin(siteurl[0], path) for path in pathlist]
         else:
             artikelurllist = urlgen[0](pathlist)
 
@@ -160,9 +159,12 @@ def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, re
             if len(reg4pubdate) != 0:
                 if len(re.findall(reg4pubdate, SeiteQuelle)) != 0:
                     tmp_pbdate = re.findall(reg4pubdate, SeiteQuelle)[0]
-                    pubdate_temp = "".join(tmp_pbdate).replace('/', '-').replace('T', ' ').replace(r'&nbsp;', ' ')	#移除decode('utf-8')
+                    pubdate_temp = "".join(tmp_pbdate).replace('/', '-').replace('T', ' ').replace(r'&nbsp;', ' ').replace('年', '-').replace('月', '-').replace('日', '-')	#移除decode('utf-8')
                     pubdate_temp = re.sub('\.\d+', '', pubdate_temp)		#移除秒数后的小数
-                    if re.match('[^0-9 :-\\\+]', pubdate_temp) != 0:
+                    if re.match('\d{4}', pubdate_temp) == None:
+                        item_pubDate.text = time.strftime(ISOTIMEFORMAT, time.localtime(time.time()))
+                        vtext = []
+                    elif re.match('[^0-9 :-\\\+]', pubdate_temp) != 0:
                         item_pubDate.text = re.sub(r'(\+\d{2}):(\d{2})', '', pubdate_temp)
                         vtext = []
                     else:
@@ -187,21 +189,17 @@ def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, re
                     vtext = [txt_tmp[0]]	#移除decode('utf-8')
 
                 comments = ''
-                Ergebnis = Entdecker.ausfuehren(lib_or_fetch, SeiteQuelle, reg4nextpage, reg4text, reg4comment, vtext, comments)
+                Ergebnis = Entdecker.ausfuehren(lib_or_fetch, artikelurl, SeiteQuelle, reg4nextpage, reg4text, reg4comment, vtext, comments)
 
                 if len(reg4comment) == 0:
                     try:
                         item_description.text = CDATA("".join(Ergebnis[0]))
                     except ValueError:
-#                        item_description.text = CDATA("".join(Ergebnis[0]).decode(encoding))
-#                    except UnicodeDecodeError:
                         item_description.text = CDATA(remove_control_characters("".join(Ergebnis[0]).decode(encoding, 'replace')))
                 else:
                     try:
                         item_description.text = CDATA("".join(Ergebnis[0]) + Ergebnis[1])
                     except ValueError:
-#                        item_description.text = CDATA("".join(Ergebnis[0]).decode(encoding) + Ergebnis[1].decode(encoding))
-#                    except UnicodeDecodeError:
                         item_description.text = CDATA(remove_control_characters("".join(Ergebnis[0]).decode(encoding, 'replace') + Ergebnis[1].decode(encoding, 'replace')))
 
             elif re.search(r'ERROR! QwQ', SeiteQuelle): pass		#在title处已填description
