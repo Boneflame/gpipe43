@@ -17,14 +17,13 @@ handlers:
 
 ######  config start  ######
 
-- url: /[subdir4bg]/example1
-  script: example1.app		
-- url: /[subdir4rss]/example1
-  script: feed_list.example1	
+- url: /[subdir4bg]/example
+  script: example.app		
+- url: /[subdir4rss]/example
+  script: feed_list.example1
 
-- url: /[subdir4bg]/example2
-  script: example2.app		
-- url: /[subdir4rss]/example2
-  script: feed_list.example2	
+- url: /[subdir4rss]/example_02
+  script: example_02.app		
+#For example_02 is not necessary to add it in feed_list.py and cron.yaml, because the feed will not save in cloud storage.
 
 ######  config end  ######
