@@ -50,6 +50,7 @@ See official guide: [app.yaml Reference](https://cloud.google.com/appengine/docs
 
 ### Optional
 * Edit ./main/Vorlage.xml and Vorlage_Error.xml, you can fill the properties of elements 'generator', 'webMaster' and 'copyright'.
+* If you just would like to format an existing feed, see example\_02.py, then add url and script to app.yaml. It's not necessary to add it in feed\_list.py and cron.yaml, because the feed will not save in cloud storage.
 
 Test
 ====
