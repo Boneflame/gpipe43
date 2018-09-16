@@ -121,8 +121,12 @@ def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, re
             root.xpath('/rss/channel/description')[0].text = CDATA(re.findall(re.compile('<meta content="(.{18,})" name="(?:description|keywords)"', re.I), page_source)[0])
         elif len(re.findall(re.compile('<div class="profile_desc_value" title="(.*?)"', re.I), page_source)) != 0:		#wechat公众号
             root.xpath('/rss/channel/description')[0].text = CDATA(re.findall(re.compile('<div class="profile_desc_value" title="(.*?)"'), page_source)[0])
+        elif len(re.findall(re.compile('<title>(.*?)</title>', re.I), page_source)) != 0:
+            root.xpath('/rss/channel/description')[0].text = CDATA(re.findall(re.compile('<title>(.*?)</title>'), page_source)[0])
         elif isinstance(urlgen, tuple) is True:
-            root.xpath('/rss/channel/description')[0].text = CDATA(urlgen[2])
+            if len(urlgen) == 3:
+                root.xpath('/rss/channel/description')[0].text = CDATA(urlgen[2])
+            else: pass
         else:
             root.xpath('/rss/channel/description')[0].text = CDATA(siteurl[0])
 
