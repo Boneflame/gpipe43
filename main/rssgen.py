@@ -86,12 +86,13 @@ def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, re
                 time.sleep(float(random.sample(range(4,10),1)[0]))
 
         #把相对路径转为绝对路径。有的网站不是所有文章的url都全部是相对或绝对路径，故全部都用urlprase处理一遍
-        if re.search('[^0-9]', pathlist[0]):		#如果有自定义的url转换函数，则调用它
+        if re.search('[^0-9]', pathlist[0]):
 #            if re.search(r'://', pathlist[0]):
 #                artikelurllist = pathlist
 #            else:
 #                artikelurllist = [urlparse.urljoin(siteurl[0], path) for path in pathlist]
             artikelurllist = [urlparse.urljoin(siteurl[0], path) for path in pathlist]
+	#如果有自定义的url(从js里获得url的id，通常是一串数字)转换函数，则调用它
         else:
             artikelurllist = urlgen[0](pathlist)
 
@@ -114,9 +115,9 @@ def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, re
         else:
             root.xpath('/rss/channel/title')[0].text = CDATA(siteurl[0])
 
-        if len(re.findall(re.compile('<meta name="(description|keywords)" content="(.*?)"', re.I), page_source)) != 0:
+        if len(re.findall(re.compile('<meta name="(?:description|keywords)" content="(.*?)"', re.I), page_source)) != 0:
             root.xpath('/rss/channel/description')[0].text = CDATA(re.findall(re.compile('<meta name="(?:description|keywords)" content="(.*?)"', re.I), page_source)[0])
-        elif len(re.findall(re.compile('<meta content="(.{18,})" name="(description|keywords)"', re.I), page_source)) != 0:
+        elif len(re.findall(re.compile('<meta content="(.{18,})" name="(?:description|keywords)"', re.I), page_source)) != 0:
             root.xpath('/rss/channel/description')[0].text = CDATA(re.findall(re.compile('<meta content="(.{18,})" name="(?:description|keywords)"', re.I), page_source)[0])
         elif len(re.findall(re.compile('<div class="profile_desc_value" title="(.*?)"', re.I), page_source)) != 0:		#wechat公众号
             root.xpath('/rss/channel/description')[0].text = CDATA(re.findall(re.compile('<div class="profile_desc_value" title="(.*?)"'), page_source)[0])

@@ -11,7 +11,7 @@ import cloudstorage as gcs
 ''''''''''''''''''
 
 rssname = ''
-siteurl = ['']
+siteurl = ['http://www.example.com/']
 reg4site = ''
 reg4title = ''	
 reg4pubdate = ''
@@ -23,7 +23,7 @@ Anzahl = 10
 
 def filter():
     result = rssgen.ausfuehren('use_urllib', 'mt', siteurl, reg4site, reg4title, reg4pubdate, reg4text, reg4comment, reg4nextpage, Anzahl)
-#    result = feed_fulltext.ausfuehren('use_urllib/use_urlfetch', siteurl, reg4nextpage, reg4text, reg4comment, Anzahl, rssname)
+#    result = feed_fulltext.ausfuehren('use_urllib/use_urlfetch', siteurl, reg4nextpage, reg4text, reg4comment, Anzahl)
     #format output if you want
 #    result = re.aub('', '', result)
 #    result = re.aub('', '', result)
