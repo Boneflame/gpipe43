@@ -159,7 +159,6 @@ def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, re
                 item_description.text = SeiteQuelle
             else:
                 item_title.text = 'No title, please check regex'
-                item_description.text = artikelurl
 
             if len(reg4pubdate) != 0:
                 if len(re.findall(reg4pubdate, SeiteQuelle)) != 0:
