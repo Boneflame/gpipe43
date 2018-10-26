@@ -41,7 +41,7 @@ def run_itemgen_st(lib_or_fetch, encoding, itemgen, x, artikelurllist, reg4title
 
 
 #main part
-def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, reg4text, reg4comment, reg4nextpage, Anzahl, *urlgen):
+def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, reg4text, reg4comment, reg4nextpage, Anzahl, *custom_para):
     if lib_or_fetch == 'use_urlfetch':
         lib_or_fetch = urlfetch_ps.pagesource
     else:
@@ -50,6 +50,9 @@ def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, re
     page_source = lib_or_fetch(siteurl[0])
     try:
         encoding = chardet.detect(page_source)['encoding']
+#        if len(custom_para) == 1:
+#            encoding = custom_para[0]
+#        else: pass
         page_source = page_source.decode(encoding)
     except UnicodeDecodeError:
         page_source = page_source.decode(encoding, 'ignore')
@@ -94,7 +97,7 @@ def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, re
             artikelurllist = [urlparse.urljoin(siteurl[0], path) for path in pathlist]
 	#如果有自定义的url(从js里获得url的id，通常是一串数字)转换函数，则调用它
         else:
-            artikelurllist = urlgen[0](pathlist)
+            artikelurllist = custom_para[0](pathlist)
 
 
         #获得文章url后休息，以防被ban
@@ -110,8 +113,8 @@ def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, re
             root.xpath('/rss/channel/title')[0].text = CDATA(re.findall(re.compile('<meta[\S\s]+?<title>(.*?)\s*</title>', re.I), page_source)[0])
         elif len(re.findall(re.compile('<title>\s*(.*?)\s*</title>', re.I), page_source)) != 0:
             root.xpath('/rss/channel/title')[0].text = CDATA(re.findall('<title>\s*(.*?)\s*</title>', page_source)[0])
-        elif isinstance(urlgen, tuple) is True:
-            root.xpath('/rss/channel/title')[0].text = CDATA(urlgen[1])
+        elif isinstance(custom_para, tuple) is True:
+            root.xpath('/rss/channel/title')[0].text = CDATA(custom_para[1])
         else:
             root.xpath('/rss/channel/title')[0].text = CDATA(siteurl[0])
 
@@ -123,9 +126,9 @@ def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, re
             root.xpath('/rss/channel/description')[0].text = CDATA(re.findall(re.compile('<div class="profile_desc_value" title="(.*?)"'), page_source)[0])
         elif len(re.findall(re.compile('<title>(.*?)</title>', re.I), page_source)) != 0:
             root.xpath('/rss/channel/description')[0].text = CDATA(re.findall(re.compile('<title>(.*?)</title>'), page_source)[0])
-        elif isinstance(urlgen, tuple) is True:
-            if len(urlgen) == 3:
-                root.xpath('/rss/channel/description')[0].text = CDATA(urlgen[2])
+        elif isinstance(custom_para, tuple) is True:
+            if len(custom_para) == 3:
+                root.xpath('/rss/channel/description')[0].text = CDATA(custom_para[2])
             else: pass
         else:
             root.xpath('/rss/channel/description')[0].text = CDATA(siteurl[0])
@@ -199,12 +202,18 @@ def ausfuehren(lib_or_fetch, func, siteurl, reg4site, reg4title, reg4pubdate, re
                     try:
                         item_description.text = CDATA("".join(Ergebnis[0]))
                     except ValueError:
-                        item_description.text = CDATA(remove_control_characters("".join(Ergebnis[0]).decode(encoding, 'replace')))
+                        if len(custom_para) == 1:
+                            item_description.text = CDATA(remove_control_characters("".join(Ergebnis[0]).decode(custom_para[0])))
+                        else:
+                            item_description.text = CDATA(remove_control_characters("".join(Ergebnis[0]).decode(encoding, 'replace')))
                 else:
                     try:
                         item_description.text = CDATA("".join(Ergebnis[0]) + Ergebnis[1])
                     except ValueError:
-                        item_description.text = CDATA(remove_control_characters("".join(Ergebnis[0]).decode(encoding, 'replace') + Ergebnis[1].decode(encoding, 'replace')))
+                        if len(custom_para) == 1:
+                            item_description.text = CDATA(remove_control_characters("".join(Ergebnis[0]).decode(custom_para[0]) + Ergebnis[1].decode(custom_para[0])))
+                        else:
+                            item_description.text = CDATA(remove_control_characters("".join(Ergebnis[0]).decode(encoding, 'replace') + Ergebnis[1].decode(encoding, 'replace')))
 
             elif re.search(r'ERROR! QwQ', SeiteQuelle): pass		#在title处已填description
             else:

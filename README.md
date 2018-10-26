@@ -33,6 +33,7 @@ Simple quickstart
 * `reg4comment`: Regex for comment. Not necessary, can leave it blank. You can also use this Regex to find all the image of a gallery in the article.
 * `reg4nextpage`: Regex for article's next page if there's more than one page.
 * `Anzahl`: How much article will be generated. If there's not only one siteurl, this limit for EVERY SINGLE siteurl instead of for all articleurl from all siteurl. 0 = no limit.<br><br>
+* `*encoding`: Optional. Generally chardet can detect the right encoding, but sometimes it cannot(for example, recognize gb18030 as gb3212), so I use 'replace' option of decode method to avoid illegal character, then there's replacement character in generated feed. So you can specify the encoding of the website. It only influence main text. 
 * `rssgen.ausfuehren('use_urllib/use_urlfetch', 'st/mt', siteurl, reg4site, reg4title, reg4pubdate, reg4text, reg4comment, reg4nextpage, Anzahl)`: Generat a RSS from a website.
 * `feed_fulltext.ausfuehren('use_urllib/use_urlfetch', siteurl, reg4nextpage, reg4text, reg4comment, Anzahl, rssname)`: Use this to generat fulltext from a RSS feed.
 	* `use_urllib`: Use urllib2，with UA

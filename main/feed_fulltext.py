@@ -23,7 +23,7 @@ ISOTIMEFORMAT = '%a, %e %b %Y %H:%M:%S %z'
 ''''''''''''''''''''''''''''''
 
 
-def ausfuehren(lib_or_fetch, siteurl, reg4nextpage, reg4text, reg4comment, Anzahl, rssname):
+def ausfuehren(lib_or_fetch, siteurl, reg4nextpage, reg4text, reg4comment, Anzahl, *custom_para):
     if lib_or_fetch == 'use_urlfetch':
         lib_or_fetch = urlfetch_ps.pagesource
     else:
@@ -75,12 +75,18 @@ def ausfuehren(lib_or_fetch, siteurl, reg4nextpage, reg4text, reg4comment, Anzah
                     try:
                         root.xpath('//item[$i]/description', i = Nummer)[0].text = CDATA(Haupttext)
                     except ValueError:
-                        root.xpath('//item[$i]/description', i = Nummer)[0].text = CDATA(remove_control_characters(Haupttext.decode(encoding, 'replace')))
+                        if len(custom_para) == 1:
+                            root.xpath('//item[$i]/description', i = Nummer)[0].text = CDATA(remove_control_characters(Haupttext.decode(custom_para[0])))
+                        else:
+                            root.xpath('//item[$i]/description', i = Nummer)[0].text = CDATA(remove_control_characters(Haupttext.decode(encoding, 'replace')))
                 else:
                     try:
                         root.xpath('//item[$i]/description', i = Nummer)[0].text = CDATA(Haupttext + Ergebnis[1])
                     except ValueError:
-                        root.xpath('//item[$i]/description', i = Nummer)[0].text = CDATA(remove_control_characters(Haupttext.decode(encoding, 'replace') + Ergebnis[1].decode(encoding, 'replace')))
+                        if len(custom_para) == 1:
+                            root.xpath('//item[$i]/description', i = Nummer)[0].text = CDATA(remove_control_characters(Haupttext.decode(custom_para[0]) + Ergebnis[1].decode(custom_para[0])))
+                        else:
+                            root.xpath('//item[$i]/description', i = Nummer)[0].text = CDATA(remove_control_characters(Haupttext.decode(encoding, 'replace') + Ergebnis[1].decode(encoding, 'replace')))
 
             elif re.search(r'ERROR! QwQ', SeiteQuelle):
                 root.xpath('//item[$i]/description', i = Nummer)[0].text = '<span style="color:rgb(255,0,0);font-size:30px;">' + SeiteQuelle + '</span>'	#移除decode('utf-8') #error信息可能需要添加decode
