@@ -78,4 +78,3 @@ Examples
 * [OMG!Ubuntu](http://misaka19002.appspot.com/feed/omgubuntu)
 * [Engadget中文版](http://misaka19002.appspot.com/feed/engadgetcn)
 * [游民星空|单机游戏](http://misaka19002.appspot.com/feed/gamersky_pcgame)
-* [Acfun文章区|动漫文化](http://misaka19002.appspot.com/feed/acfun)
